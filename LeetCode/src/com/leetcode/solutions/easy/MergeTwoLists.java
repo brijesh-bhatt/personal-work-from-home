@@ -34,33 +34,69 @@ import com.leetcode.models.ListNode;
  */
 public class MergeTwoLists {
     public static ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        ListNode list1Itr = list1;
-        ListNode list2Itr = list2;
-        while (list2Itr != null) {
-            ListNode prevElement = null;
-            ListNode element = list2Itr;
-            ListNode nextElement = list2Itr.next;
-//            while (list1Itr != null) {
-//                if(prevElement == null) {
-//                    if(list1Itr.val <= list2Itr.val) {
-//                        list2Itr.next = list1Itr;
-//                        second.next = first;
-//                    }
-//                    else {
-//                        if(first.val == second.val) {
-//                            ListNode temp = second.next;
-//                            second.next = first.next;
-//                            first.next = second;
-//                        }
-//                    }
-//                }
-//
-//                System.out.println(list1);
-//                second = second.next;
-//            }
-//            combinedList = combinedList.next;
+        ListNode listNode = list1;
+        while (listNode.next != null) {
+            listNode = listNode.next;
         }
-        return list1;
+        listNode.next = list2;
+
+        ListNode outPut = list1;
+        ListNode previousNode = null;
+//        while(outPut.next != null) {
+//            ListNode currentNode = outPut;
+//            ListNode nextNode = outPut.next;
+//            System.out.println();
+//            System.out.println(previousNode);
+//            System.out.println(currentNode);
+//            System.out.println(nextNode);
+//            System.out.println(outPut);
+//            if(currentNode != null && nextNode != null && currentNode.val > nextNode.val) {
+//                currentNode.next = nextNode.next;
+//                previousNode.next = nextNode;
+//                nextNode.next = currentNode;
+//            }
+//            System.out.println();
+//            System.out.println(outPut);
+//            previousNode = currentNode;
+//            outPut = outPut.next;
+//        }
+
+        System.out.println(list1);
+        ListNode listNodeLoop1 = list1;
+        while(listNodeLoop1 != null) {
+            ListNode currentNode = listNodeLoop1;
+            previousNode = currentNode;
+            System.out.println("currentNode: " + currentNode.val);
+            ListNode listNodeLoop2 = listNodeLoop1;
+            while (listNodeLoop2 != null && listNodeLoop2.next != null) {
+                ListNode nextNode = listNodeLoop2.next;
+                System.out.println("previousNode: " + previousNode.val);
+                System.out.println("nextNode: " + nextNode.val);
+                if(previousNode == currentNode) {
+                    if(currentNode != null && nextNode != null && currentNode.val >= nextNode.val) {
+//                        currentNode.next = nextNode.next;
+//                        nextNode.next = currentNode;
+                        previousNode.next = nextNode.next;
+                        nextNode.next = currentNode.next;
+                        currentNode.next = nextNode;
+                        System.out.println(list1);
+                    }
+                }
+                else {
+                    if(currentNode != null && nextNode != null && currentNode.val >= nextNode.val) {
+                        previousNode.next = nextNode.next;
+                        nextNode.next = currentNode.next;
+                        currentNode.next = nextNode;
+                        System.out.println(list1);
+                    }
+                }
+                listNodeLoop2 = listNodeLoop2.next;
+                previousNode = listNodeLoop2;
+            }
+            listNodeLoop1 = listNodeLoop1.next;
+            System.out.println();
+        }
+        return outPut;
     }
 
     public static void main(String[] args) {
