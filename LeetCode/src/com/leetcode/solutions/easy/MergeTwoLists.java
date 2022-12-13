@@ -33,75 +33,215 @@ import com.leetcode.models.ListNode;
  * Both list1 and list2 are sorted in non-decreasing order.
  */
 public class MergeTwoLists {
+
     public static ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        ListNode listNode = list1;
-        while (listNode.next != null) {
-            listNode = listNode.next;
-        }
-        listNode.next = list2;
-
-        ListNode outPut = list1;
-        ListNode previousNode = null;
-//        while(outPut.next != null) {
-//            ListNode currentNode = outPut;
-//            ListNode nextNode = outPut.next;
-//            System.out.println();
-//            System.out.println(previousNode);
-//            System.out.println(currentNode);
-//            System.out.println(nextNode);
-//            System.out.println(outPut);
-//            if(currentNode != null && nextNode != null && currentNode.val > nextNode.val) {
-//                currentNode.next = nextNode.next;
-//                previousNode.next = nextNode;
-//                nextNode.next = currentNode;
-//            }
-//            System.out.println();
-//            System.out.println(outPut);
-//            previousNode = currentNode;
-//            outPut = outPut.next;
-//        }
-
-        System.out.println(list1);
-        ListNode listNodeLoop1 = list1;
-        while(listNodeLoop1 != null) {
-            ListNode currentNode = listNodeLoop1;
-            previousNode = currentNode;
-            System.out.println("currentNode: " + currentNode.val);
-            ListNode listNodeLoop2 = listNodeLoop1;
-            while (listNodeLoop2 != null && listNodeLoop2.next != null) {
-                ListNode nextNode = listNodeLoop2.next;
-                System.out.println("previousNode: " + previousNode.val);
-                System.out.println("nextNode: " + nextNode.val);
-                if(previousNode == currentNode) {
-                    if(currentNode != null && nextNode != null && currentNode.val >= nextNode.val) {
-//                        currentNode.next = nextNode.next;
-//                        nextNode.next = currentNode;
-                        previousNode.next = nextNode.next;
-                        nextNode.next = currentNode.next;
-                        currentNode.next = nextNode;
-                        System.out.println(list1);
+        ListNode newOrderedListNodes = null;
+        ListNode newOrderedListNodeFirst = null;
+        while(list1!=null || list2!=null) {
+            if(list1!=null && list2!=null) {
+                if(list1.val <= list2.val) {
+                    if(newOrderedListNodes == null) {
+                        newOrderedListNodes = new ListNode(list1.val, new ListNode(list2.val));
+                        newOrderedListNodeFirst = newOrderedListNodes;
+                        newOrderedListNodes = newOrderedListNodes.next;
+                    }
+                    else {
+                        newOrderedListNodes.next = new ListNode(list1.val, new ListNode(list2.val));
+                        newOrderedListNodes = newOrderedListNodes.next.next;
                     }
                 }
                 else {
-                    if(currentNode != null && nextNode != null && currentNode.val >= nextNode.val) {
-                        previousNode.next = nextNode.next;
-                        nextNode.next = currentNode.next;
-                        currentNode.next = nextNode;
-                        System.out.println(list1);
+                    if(newOrderedListNodes == null) {
+                        newOrderedListNodes = new ListNode(list2.val, new ListNode(list1.val));
+                        newOrderedListNodeFirst = newOrderedListNodes;
+                        newOrderedListNodes = newOrderedListNodes.next;
+                    }
+                    else {
+                        newOrderedListNodes.next = new ListNode(list2.val, new ListNode(list1.val));
+                        newOrderedListNodes = newOrderedListNodes.next.next;
                     }
                 }
-                listNodeLoop2 = listNodeLoop2.next;
-                previousNode = listNodeLoop2;
             }
-            listNodeLoop1 = listNodeLoop1.next;
-            System.out.println();
+            else if(list1 == null) {
+                if(newOrderedListNodes == null) {
+                    newOrderedListNodes = new ListNode(list2.val);
+                    newOrderedListNodeFirst = newOrderedListNodes;
+                    newOrderedListNodes = newOrderedListNodes.next;
+                }
+                else {
+                    if(newOrderedListNodes.val > list2.val) {
+                        int temp = newOrderedListNodes.val;
+                        newOrderedListNodes.val = list2.val;
+                        newOrderedListNodes.next = new ListNode(temp);
+                        newOrderedListNodes = newOrderedListNodes.next;
+                    }
+                    else {
+                        newOrderedListNodes.next = new ListNode(list2.val);
+                        newOrderedListNodes = newOrderedListNodes.next;
+                    }
+                }
+            }
+            else if(list2 == null) {
+                if(newOrderedListNodes == null) {
+                    newOrderedListNodes = new ListNode(list1.val);
+                    newOrderedListNodeFirst = newOrderedListNodes;
+                    newOrderedListNodes = newOrderedListNodes.next;
+                }
+                else {
+                    if(newOrderedListNodes.val > list1.val) {
+                        int temp = newOrderedListNodes.val;
+                        newOrderedListNodes.val = list1.val;
+                        newOrderedListNodes.next = new ListNode(temp);
+                        newOrderedListNodes = newOrderedListNodes.next;
+                    }
+                    else {
+                        newOrderedListNodes.next = new ListNode(list1.val);
+                        newOrderedListNodes = newOrderedListNodes.next;
+                    }
+                }
+            }
+            list1 = list1 != null ? list1.next : list1;
+            list2 = list2 != null ? list2.next : list2;
         }
-        return outPut;
+        return newOrderedListNodeFirst;
+    }
+
+    public static ListNode mergeTwoListsNew(ListNode list1, ListNode list2) {
+        ListNode newOrderedListNodes = null;
+        ListNode newOrderedListNodeFirst = null;
+        if(list1 == null) {
+            return list2;
+        }
+        if(list2 == null) {
+            return list1;
+        }
+        while(list1 != null && list2 != null) {
+            if(newOrderedListNodes == null) {
+                if(list1.val <= list2.val) {
+                    newOrderedListNodes = new ListNode(list1.val, new ListNode(list2.val));
+                }
+                else {
+                    newOrderedListNodes = new ListNode(list2.val, new ListNode(list1.val));
+                }
+                newOrderedListNodeFirst = newOrderedListNodes;
+                newOrderedListNodes = newOrderedListNodes.next;
+            }
+            else {
+                if(newOrderedListNodes.val > list1.val) {
+                    int temp = newOrderedListNodes.val;
+                    newOrderedListNodes.val = list1.val;
+                    newOrderedListNodes.next = new ListNode(temp);
+                    newOrderedListNodes = newOrderedListNodes.next;
+                }
+                else {
+                    newOrderedListNodes.next = new ListNode(list1.val);
+                    newOrderedListNodes = newOrderedListNodes.next;
+                }
+
+                if(newOrderedListNodes.val > list2.val) {
+                    int temp = newOrderedListNodes.val;
+                    newOrderedListNodes.val = list2.val;
+                    newOrderedListNodes.next = new ListNode(temp);
+                    newOrderedListNodes = newOrderedListNodes.next;
+                }
+                else {
+                    newOrderedListNodes.next = new ListNode(list2.val);
+                    newOrderedListNodes = newOrderedListNodes.next;
+                }
+            }
+            list1 = list1.next;
+            list2 = list2.next;
+        }
+
+        while (list1 != null) {
+            if(newOrderedListNodes.val > list1.val) {
+                int temp = newOrderedListNodes.val;
+                newOrderedListNodes.val = list1.val;
+                newOrderedListNodes.next = new ListNode(temp);
+                newOrderedListNodes = newOrderedListNodes.next;
+            }
+            else {
+                newOrderedListNodes.next = new ListNode(list1.val);
+                newOrderedListNodes = newOrderedListNodes.next;
+            }
+            list1 = list1.next;
+        }
+
+        while (list2!=null) {
+            if(newOrderedListNodes.val > list2.val) {
+                int temp = newOrderedListNodes.val;
+                newOrderedListNodes.val = list2.val;
+                newOrderedListNodes.next = new ListNode(temp);
+                newOrderedListNodes = newOrderedListNodes.next;
+            }
+            else {
+                newOrderedListNodes.next = new ListNode(list2.val);
+                newOrderedListNodes = newOrderedListNodes.next;
+            }
+            list2 = list2.next;
+        }
+        return newOrderedListNodeFirst;
+    }
+
+    public static ListNode mergeTwoListsLatest(ListNode list1, ListNode list2) {
+        if(list1 == null) {
+            return list2;
+        }
+        if(list2 == null) {
+            return list1;
+        }
+
+        ListNode newOrderedListNodes = list1;
+        ListNode newOrderedListNodeFirst = list1;
+        ListNode list2FirstNode = list2;
+        boolean isList2ElementsGreaterThanList1 = true;
+        while (list2 != null) {
+            newOrderedListNodes = newOrderedListNodeFirst;
+            while(newOrderedListNodes != null) {
+                if(newOrderedListNodes.val >= list2.val) {
+                    int temp = newOrderedListNodes.val;
+                    ListNode nextNode = newOrderedListNodes.next;
+                    newOrderedListNodes.val = list2.val;
+                    newOrderedListNodes.next = new ListNode(temp, nextNode);
+                    isList2ElementsGreaterThanList1 = false;
+                    break;
+                }
+                else {
+                    if(newOrderedListNodes.next == null) {
+                        newOrderedListNodes.next = new ListNode(list2.val, null);
+                        isList2ElementsGreaterThanList1 = false;
+                        break;
+                    }
+                }
+                newOrderedListNodes = newOrderedListNodes.next;
+            }
+            if(list2.next == null && isList2ElementsGreaterThanList1) {
+                newOrderedListNodeFirst = list1;
+                while(list1.next != null) {
+                    list1 = list1.next;
+                }
+                list1.next = list2FirstNode;
+            }
+            list2 = list2.next;
+        }
+        return newOrderedListNodeFirst;
     }
 
     public static void main(String[] args) {
-        ListNode one = new ListNode(1, new ListNode(2, new ListNode(4, null)));
-        ListNode two = new ListNode(1, new ListNode(3, new ListNode(4, null)));
-        System.out.println(mergeTwoLists(one, two).toString());
+        ListNode one = new ListNode(1, new ListNode(2, new ListNode(4)));
+        ListNode two = new ListNode(1, new ListNode(3, new ListNode(4)));
+        System.out.println(mergeTwoListsLatest(one, two).toString());
+
+        one = new ListNode(5);
+        two = new ListNode(1, new ListNode(2, new ListNode(4)));
+        System.out.println(mergeTwoListsLatest(one, two).toString());
+
+        one = new ListNode(-9, new ListNode(3));
+        two = new ListNode(5, new ListNode(7));
+        System.out.println(mergeTwoListsLatest(one, two).toString());
+
+        one = new ListNode(-2, new ListNode(5));
+        two = new ListNode(-9, new ListNode(-6, new ListNode(-3, new ListNode(-2, new ListNode(-1, new ListNode(1, new ListNode(6)))))));
+        System.out.println(mergeTwoListsLatest(one, two).toString());
     }
 }
