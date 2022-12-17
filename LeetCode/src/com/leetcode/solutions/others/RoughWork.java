@@ -5,34 +5,41 @@ import java.util.*;
 public class RoughWork {
 
     public static void main(String[] args) {
-        //System.out.println(wordBreak("leetcode", Arrays.asList("leet", "code")));
-        System.out.println(wordBreak("applepenapple", Arrays.asList("apple","pen")));
-        System.out.println(wordBreak("catsandog", Arrays.asList("cats","dog","sand","and","cat")));
+        System.out.println(longestSubstringWithoutRepeatingCharacters("abcabcbb"));
+        System.out.println(longestSubstringWithoutRepeatingCharacters("bbbbb"));
+        System.out.println(longestSubstringWithoutRepeatingCharacters("pwwkew"));
+        System.out.println(longestSubstringWithoutRepeatingCharacters(" "));
+        System.out.println(longestSubstringWithoutRepeatingCharacters("aab"));
+        System.out.println(longestSubstringWithoutRepeatingCharacters("dvdf"));
     }
 
-    private static boolean wordBreak(String str, List<String> dict) {
-        Set<String> wordDictSet = new HashSet<>(dict);
-        boolean[] visited = new boolean[str.length()];
-        Queue<Integer> queue = new LinkedList<>();
-        queue.add(0);
-        while (!queue.isEmpty()) {
-            Integer start = queue.remove();
-            if(visited[start]) {
-                continue;
-            }
-
-            for (int end = start + 1; end <= str.length(); end++) {
-                if(wordDictSet.contains(str.substring(start, end))) {
-                    queue.add(end);
-                    if (end == str.length()) {
-                        return true;
-                    }
+    private static int longestSubstringWithoutRepeatingCharacters(String str) {
+        Set<Character> characterSet = new HashSet<>();
+        int ans = Integer.MIN_VALUE;
+        int start = -1;
+        int count = 0;
+        for(int i=0; i<str.length(); i++) {
+            if(!characterSet.contains(str.charAt(i))) {
+                characterSet.add(str.charAt(i));
+                count++;
+                if(start == -1) {
+                    start = i;
                 }
             }
-
-            visited[start] = true;
+            else {
+                if(ans < count) {
+                    ans = count;
+                }
+                count--;
+                characterSet.remove(str.charAt(start));
+                start++;
+                i--;
+            }
         }
-        return false;
+        if (count > ans) {
+            ans = count;
+        }
+        return ans;
     }
 
 
